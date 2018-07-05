@@ -2,6 +2,7 @@ import tkinter
 import sqlite3
 from tkinter import *
 import time
+import random
 from PIL import Image,ImageTk
 
 
@@ -14,39 +15,41 @@ root.geometry("1500x500")
 
 def price():
     master = Tk()
-    master.geometry("300x600")
+    master.geometry("550x650")
     f1 = Frame(master)
     f1.pack(side=TOP)
-    x = Label(f1, text="PRICE LIST",font=("comic sans ms","20","underline","bold"),fg="steel blue")
+    x = Label(f1, text="PRICE LIST\n",font=("comic sans ms","20","underline","bold"),fg="steel blue")
     x.pack()
 
     f2 = Frame(master)
     f2.pack(side=LEFT)
-    a1 = Label(f2, text="ITEMS\n\n",font=("comic sans ms","20","underline"),fg="steel blue")
+    a1 = Label(f2, text="ITEMS\n",font=("comic sans ms","15","underline"),fg="steel blue")
     a1.pack()
-    a = Label(f2, text="FRIES MEAL\n\nLUNCH MEAL\n\nBURGER MEAL\n\nPIZZA MEAL\n\nCHESSE BURGER\n\nDRINKS",font=("comic sans ms","15"),fg="steel blue")
+    a = Label(f2, text="FRIES MEAL\n\nLUNCH MEAL\n\nBURGER MEAL\n\nPIZZA MEAL\n\nCHESSE BURGER\n\nDRINKS\n\nMEAL 1-\nFRIES MEAL+BURGER MEAL+DRINKS\n\nMEAL 2-\nPIZZA MEAL+CHESSE BURGER+DRINKS",font=("comic sans ms","15"),fg="steel blue")
     a.pack()
 
     f3 = Frame(master)
     f3.pack(side=RIGHT)
-    b1 = Label(f3, text="PRICE\n\n",font=("comic sans ms","20","underline"),fg="steel blue")
+    b1 = Label(f3, text="PRICE\n",font=("comic sans ms","15","underline"),fg="steel blue")
     b1.pack()
-    b = Label(f3, text="Rs 100\n\nRs 230\n\nRs 155\n\nRs 440\n\nRs 150\n\nRs 50",font=("comic sans ms","15"),fg="steel blue")
+    b = Label(f3, text="Rs 100\n\nRs 230\n\nRs 155\n\nRs 440\n\nRs 150\n\nRs 50\n\n\nRs 250\n\n\nRs 500",font=("comic sans ms","15"),fg="steel blue")
     b.pack()
 
     master.mainloop()
 
 class Calculate:
-    def price(self,e2,e3,e4,e5,e6,e7):
+    def price(self,e2,e3,e4,e5,e6,e7,m1,m2):
         a = e2.get()
         b = e3.get()
         c = e4.get()
         d = e5.get()
         e = e6.get()
         f = e7.get()
-        costofmeal = str(int(a) * 100 + int(b) * 230 + int(c) * 155 + int(d) * 440 + int(e) * 150 + int(f) * 50)
-        charge = str((int(a) * 100 + int(b) * 230 + int(c) * 155 + int(d) * 440 + int(e) * 150 + int(f) * 50) / 99)
-        pay = str((int(a) * 100 + int(b) * 230 + int(c) * 155 + int(d) * 440 + int(e) * 150 + int(f) * 50) * 0.10)
+        g = m1.get()
+        h = m2.get()
+        costofmeal = str(int(a) * 100 + int(b) * 230 + int(c) * 155 + int(d) * 440 + int(e) * 150 + int(f) * 50 + int(g) * 250 + int(h) *500)
+        charge = str((int(a) * 100 + int(b) * 230 + int(c) * 155 + int(d) * 440 + int(e) * 150 + int(f) * 50 + int(g) * 250 + int(h) *500) / 99)
+        pay = str((int(a) * 100 + int(b) * 230 + int(c) * 155 + int(d) * 440 + int(e) * 150 + int(f) * 50 + int(g) * 250 + int(h) *500) * 0.10)
         tt = str(float(costofmeal) + float(charge) + float(pay))
         cost.set(costofmeal)
         service.set(charge)
@@ -55,7 +58,8 @@ class Calculate:
 
 def amount():
     c=Calculate()
-    c.price(e2,e3,e4,e5,e6,e7)
+    c.price(e2,e3,e4,e5,e6,e7,m1,m2)
+
 
 ran=StringVar()
 cost=StringVar()
@@ -63,14 +67,22 @@ service=StringVar()
 tax=StringVar()
 final=StringVar()
 
+
+x=random.randint(1,500)
+order=str(x)
+ran.set(order)
+
+
+
 def reset():
-    e1.set("")
     e2.delete(0,END)
     e3.delete(0,END)
     e4.delete(0,END)
     e5.delete(0,END)
     e6.delete(0,END)
     e7.delete(0,END)
+    m1.delete(0, END)
+    m2.delete(0, END)
     cost.set("")
     service.set("")
     tax.set("")
@@ -94,7 +106,7 @@ frame2.pack(side=LEFT)
 
 lbl1=Label(frame2,text="Order No.",font=("comic sans ms","15"),fg="steel blue")
 lbl1.grid(row=0)
-e1=Entry(frame2,text="Order No.",font=("comic sans ms","15"),fg="steel blue")
+e1=Entry(frame2,text="Order No.",textvariable=ran,font=("comic sans ms","15"),fg="steel blue")
 e1.grid(row=0,column=1)
 
 lbl2=Label(frame2,text="Fries Meal",font=("comic sans ms","15"),fg="steel blue")
@@ -122,40 +134,49 @@ lbl6.grid(row=5)
 e6=Entry(frame2,font=("comic sans ms","15"),fg="steel blue")
 e6.grid(row=5,column=1)
 
+meal1=Label(frame2,text="Meal 1",font=("comic sans ms","15"),fg="steel blue")
+meal1.grid(row=6)
+m1=Entry(frame2,font=("comic sans ms","15"),fg="steel blue")
+m1.grid(row=6,column=1)
 #------------------------------------
 
 frame3=Frame(root)
 frame3.pack(side=RIGHT)
 
+meal2=Label(frame3,text="Meal 2",font=("comic sans ms","15"),fg="steel blue")
+meal2.grid(row=0)
+m2=Entry(frame3,font=("comic sans ms","15"),fg="steel blue")
+m2.grid(row=0,column=1)
+
 lbl7=Label(frame3,text="Drinks",font=("comic sans ms","15"),fg="steel blue")
-lbl7.grid(row=0)
+lbl7.grid(row=1)
 e7=Entry(frame3,font=("comic sans ms","15"),fg="steel blue")
-e7.grid(row=0,column=1)
+e7.grid(row=1,column=1)
 
 lbl8=Label(frame3,text="Cost",font=("comic sans ms","15"),fg="steel blue")
-lbl8.grid(row=1)
+lbl8.grid(row=2)
 e8=Entry(frame3,textvariable=cost,font=("comic sans ms","15"),fg="steel blue")
-e8.grid(row=1,column=1)
+e8.grid(row=2,column=1)
 
 lbl9=Label(frame3,text="Service Charge",font=("comic sans ms","15"),fg="steel blue")
-lbl9.grid(row=2)
+lbl9.grid(row=3)
 e9=Entry(frame3,textvariable=service,font=("comic sans ms","15"),fg="steel blue")
-e9.grid(row=2,column=1)
+e9.grid(row=3,column=1)
 
 lbl10=Label(frame3,text="Tax",font=("comic sans ms","15"),fg="steel blue")
-lbl10.grid(row=3)
+lbl10.grid(row=4)
 e10=Entry(frame3,textvariable=tax,font=("comic sans ms","15"),fg="steel blue")
-e10.grid(row=3,column=1)
+e10.grid(row=4,column=1)
 
 lbl11=Label(frame3,text="Subtotal",font=("comic sans ms","15"),fg="steel blue")
-lbl11.grid(row=4)
+lbl11.grid(row=5)
 e11=Entry(frame3,textvariable=cost,font=("comic sans ms","15"),fg="steel blue")
-e11.grid(row=4,column=1)
+e11.grid(row=5,column=1)
 
 lbl12=Label(frame3,text="Total",font=("comic sans ms","15"),fg="steel blue")
-lbl12.grid(row=5)
+lbl12.grid(row=6)
 e12=Entry(frame3,textvariable=final,font=("comic sans ms","15"),fg="steel blue")
-e12.grid(row=5,column=1)
+e12.grid(row=6,column=1)
 
 
 #sheet.write()
