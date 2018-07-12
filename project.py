@@ -3,18 +3,23 @@ import sqlite3
 from tkinter import *
 import time
 import random
-from PIL import Image,ImageTk
+from tkinter import messagebox
+#from PIL import Image,ImageTk
 
-
+#main window GUI
 root=Tk()
 root.geometry("1500x500")
 root.title("Restaurant Management System")
 
-#table=sqlite3.connect("restaurant8.db")
-#table.execute('''CREATE TABLE ORDERS
-#(ORDER_NUMBER INT PRIMARY KEY NOT NULL,FRIES_MEAL INT,LUNCH_MEAL INT,BURGER_MEAL INT,PIZZA_MEAL INT,CHEESE_BURGER INT,DRINKS INT,COST INT,SERVICE_CHARGE FLOAT,TAX FLOAT,SUBTOTAL FLOAT,TOTAL FLOAT);''')
-#table.commit()
 
+#database
+table=sqlite3.connect("6.db")
+table.execute('''CREATE TABLE ORDERS
+(ORDER_NUMBER INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,FRIES_MEAL TEXT,LUNCH_MEAL TEXT,BURGER_MEAL TEXT,PIZZA_MEAL TEXT,CHEESE_BURGER TEXT,DRINKS TEXT,MEAL_1 TEXT,MEAL_2 TEXT,COST TEXT,SERVICE_CHARGE TEXT,TAX TEXT,SUBTOTAL TEXT,TOTAL TEXT);''')
+table.commit()
+
+
+#price list GUI
 def price():
     master = Tk()
     master.geometry("550x650")
@@ -39,31 +44,9 @@ def price():
     b.pack()
 
     master.mainloop()
+#-------------------------------------------------------------------------------
 
-class Calculate:
-    def price(self,e2,e3,e4,e5,e6,e7,m1,m2):
-        a = e2.get()
-        b = e3.get()
-        c = e4.get()
-        d = e5.get()
-        e = e6.get()
-        f = e7.get()
-        g = m1.get()
-        h = m2.get()
-        costofmeal = str(int(a) * 100 + int(b) * 230 + int(c) * 155 + int(d) * 440 + int(e) * 150 + int(f) * 50 + int(g) * 250 + int(h) *500)
-        charge = str((int(a) * 100 + int(b) * 230 + int(c) * 155 + int(d) * 440 + int(e) * 150 + int(f) * 50 + int(g) * 250 + int(h) *500) / 99)
-        pay = str((int(a) * 100 + int(b) * 230 + int(c) * 155 + int(d) * 440 + int(e) * 150 + int(f) * 50 + int(g) * 250 + int(h) *500) * 0.10)
-        tt = str(float(costofmeal) + float(charge) + float(pay))
-        cost.set(costofmeal)
-        service.set(charge)
-        tax.set(pay)
-        final.set(tt)
-
-def amount():
-    c=Calculate()
-    c.price(e2,e3,e4,e5,e6,e7,m1,m2)
-
-
+#assigning values to variables
 ran=StringVar()
 fries=StringVar()
 lunch=StringVar()
@@ -76,41 +59,90 @@ meal_2=StringVar()
 cost=StringVar()
 service=StringVar()
 tax=StringVar()
+sub_total=StringVar()
 final=StringVar()
 
+#use of class for calculations
+class Calculate:
+    def price(self,e2,e3,e4,e5,e6,e7,m1,m2):
+        a = float(e2.get())
+        b = float(e3.get())
+        c = float(e4.get())
+        d = float(e5.get())
+        e = float(e6.get())
+        f = float(e7.get())
+        g = float(m1.get())
+        h = float(m2.get())
+        costoffries=a*100
+        costoflunch=b*230
+        costofburger=c*155
+        costofpizza=d*440
+        costofchesseburger=e*150
+        costofdrinks=f*50
+        costofmeal1=g*250
+        costofmeal2=h*500
+        costofmeal = str(int(a) * 100 + int(b) * 230 + int(c) * 155 + int(d) * 440 + int(e) * 150 + int(f) * 50 + int(g) * 250 + int(h) *500)
+        charge = str((int(a) * 100 + int(b) * 230 + int(c) * 155 + int(d) * 440 + int(e) * 150 + int(f) * 50 + int(g) * 250 + int(h) *500) / 99)
+        pay = str((int(a) * 100 + int(b) * 230 + int(c) * 155 + int(d) * 440 + int(e) * 150 + int(f) * 50 + int(g) * 250 + int(h) *500) * 0.10)
+        subtotal=str(int(a) * 100 + int(b) * 230 + int(c) * 155 + int(d) * 440 + int(e) * 150 + int(f) * 50 + int(g) * 250 + int(h) *500)
+        tt = str(float(costofmeal) + float(charge) + float(pay))
+        cost.set(costofmeal)
+        service.set(charge)
+        tax.set(pay)
+        sub_total.set(subtotal)
+        final.set(tt)
+        table.execute("INSERT INTO ORDERS(FRIES_MEAL,LUNCH_MEAL,BURGER_MEAL,PIZZA_MEAL,CHEESE_BURGER,DRINKS,MEAL_1,MEAL_2,COST,SERVICE_CHARGE,TAX,SUBTOTAL,TOTAL)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)",(str(costoffries),str(costoflunch),str(costofburger),str(costofpizza),str(costofchesseburger),str(costofdrinks),str(costofmeal1),str(costofmeal2),str(costofmeal),str(charge),str(pay),str(subtotal),str(tt),))
+        table.commit()
+        messagebox.showinfo("Success", "Bill Successfully Saved..")
+        for row in table.execute("SELECT * FROM ORDERS"):
+            print(row)
 
+
+def amount():
+    c=Calculate()
+    c.price(e2,e3,e4,e5,e6,e7,m1,m2)
+#------------------------------------------------------------------------
+
+
+#order number
 x=random.randint(1,500)
 order=str(x)
 ran.set(order)
+#----------------------------------------------------------------
 
 
-fries.set(0)
-lunch.set(0)
-burger.set(0)
-pizza.set(0)
-cheese_burger.set(0)
-drinks.set(0)
-meal_1.set(0)
-meal_2.set(0)
+#giving default values to different variables
+fries.set(0.0)
+lunch.set(0.0)
+burger.set(0.0)
+pizza.set(0.0)
+cheese_burger.set(0.0)
+drinks.set(0.0)
+meal_1.set(0.0)
+meal_2.set(0.0)
+#----------------------------------------------------------------
 
+
+
+#function to reset all values
 def reset():
     ran.set(int(order)+1)
-    fries.set(0)
-    lunch.set(0)
-    burger.set(0)
-    pizza.set(0)
-    cheese_burger.set(0)
-    drinks.set(0)
-    meal_1.set(0)
-    meal_2.set(0)
-    cost.set(0)
-    service.set(0)
-    tax.set(0)
-    final.set(0)
+    fries.set(0.0)
+    lunch.set(0.0)
+    burger.set(0.0)
+    pizza.set(0.0)
+    cheese_burger.set(0.0)
+    drinks.set(0.0)
+    meal_1.set(0.0)
+    meal_2.set(0.0)
+    cost.set(0.0)
+    service.set(0.0)
+    tax.set(0.0)
+    final.set(0.0)
 
-#****************************************************************
+#------------------------------------------------------------------------
 
-
+#main window GUI representation
 frame1=Frame(root)
 frame1.pack(side=TOP)
 x=Label(frame1,text="RESTAURANT MANAGEMENT SYSTEM",font=("comic sans ms",'30',"bold","underline"),fg="steel blue",bd=10,anchor=W)
@@ -199,12 +231,9 @@ e12=Entry(frame3,textvariable=final,font=("comic sans ms","15"),fg="steel blue")
 e12.grid(row=6,column=1)
 
 
+#------------------------------------------------------------------
 
-#table.execute("INSERT INTO ORDERS VALUES({},{},{},{},{},{},{},{},{},{},{},{})VALUES(e1,e2,e3,e4,e5,e6,e7,e8,e9,e10,e11,e12);")
-#table.commit()
-
-#---------------------------------
-
+#buttons and their working
 frame4=Frame(root)
 frame4.pack(side=BOTTOM)
 price=Button(frame4,text="price",height=3,width=10,font=("comic sans ms","11"),fg="steel blue",command=price)
@@ -218,4 +247,5 @@ exit.grid(row=0,column=15,padx=10,pady=10)
 
 #--------------------------------------------------------
 
+#end of mainloop
 mainloop()
