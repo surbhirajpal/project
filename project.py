@@ -3,6 +3,7 @@ from tkinter import *
 import time
 import random
 from tkinter import messagebox
+#import pillow
 from PIL import Image,ImageTk
 
 #main window GUI
