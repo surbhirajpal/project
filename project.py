@@ -1,19 +1,22 @@
-import tkinter
 import sqlite3
 from tkinter import *
 import time
 import random
 from tkinter import messagebox
-#from PIL import Image,ImageTk
+from PIL import Image,ImageTk
 
 #main window GUI
 root=Tk()
-root.geometry("1500x500")
+root.geometry("2000x650+0+0")
 root.title("Restaurant Management System")
+load=Image.open("food2.jpg")
+background_image=ImageTk.PhotoImage(load)
+background_label=Label(root,image=background_image)
+background_label.place(x=0,y=0,relheight=1,relwidth=1)
 
 
 #database
-table=sqlite3.connect("6.db")
+table=sqlite3.connect("1.db")
 table.execute('''CREATE TABLE ORDERS
 (ORDER_NUMBER INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,FRIES_MEAL TEXT,LUNCH_MEAL TEXT,BURGER_MEAL TEXT,PIZZA_MEAL TEXT,CHEESE_BURGER TEXT,DRINKS TEXT,MEAL_1 TEXT,MEAL_2 TEXT,COST TEXT,SERVICE_CHARGE TEXT,TAX TEXT,SUBTOTAL TEXT,TOTAL TEXT);''')
 table.commit()
