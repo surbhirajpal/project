@@ -17,16 +17,14 @@ def second_window():
         root.geometry("2000x650+0+0")
         root.title("Restaurant Management System")
         load1 = Image.open("food2.jpg")
-        background = ImageTk.PhotoImage(load1)
-        background_label = Label(root, image=background)
-        background_label.place(x=0, y=0, relheight=1, relwidth=1)
-        """
+        background1 = ImageTk.PhotoImage(load1)
+        background_label1 = Label(root, image=background1)
+        background_label1.place(x=0, y=0, relheight=1, relwidth=1)
         #database
         table=sqlite3.connect("bills.db")
-        table.execute('''CREATE TABLE ORDERS
+        table.execute('''CREATE TABLE IF NOT EXISTS ORDERS
         (ORDER_NUMBER INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,FRIES_MEAL TEXT,LUNCH_MEAL TEXT,BURGER_MEAL TEXT,PIZZA_MEAL TEXT,CHEESE_BURGER TEXT,DRINKS TEXT,MEAL_1 TEXT,MEAL_2 TEXT,COST TEXT,SERVICE_CHARGE TEXT,TAX TEXT,SUBTOTAL TEXT,TOTAL TEXT);''')
         table.commit()
-        """
 
         # price list GUI
         def price():
@@ -110,13 +108,13 @@ def second_window():
                 tax.set(PaidTax)
                 sub_total.set(costofmeal)
                 final.set(OverAllCost)
-                """
+
                 table.execute("INSERT INTO ORDERS(FRIES_MEAL,LUNCH_MEAL,BURGER_MEAL,PIZZA_MEAL,CHEESE_BURGER,DRINKS,MEAL_1,MEAL_2,COST,SERVICE_CHARGE,TAX,SUBTOTAL,TOTAL)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)",(str(costoffries),str(costoflunch),str(costofburger),str(costofpizza),str(costofchesseburger),str(costofdrinks),str(costofmeal1),str(costofmeal2),str(costofmeal),str(Service),str(PaidTax),str(costofmeal),str(OverAllCost),))
                 table.commit()
                 messagebox.showinfo("Success", "Bill Successfully Saved..")
                 for row in table.execute("SELECT * FROM ORDERS"):
                     print(row)
-                """
+
 
         def amount():
             c = Calculate()
@@ -168,6 +166,9 @@ def second_window():
             frame1.after(200, time_display)
 
         # ------------------------------------------------------------------------
+        def logout():
+            root.destroy()
+            second_window()
 
         # main window GUI representation
         frame1 = Frame(root)
@@ -265,18 +266,21 @@ def second_window():
         # buttons and their working
         frame4 = Frame(root)
         frame4.pack(side=BOTTOM)
-        price = Button(frame4, text="price", height=3, width=10, font=("comic sans ms", "11"), fg="steel blue",
+        price = Button(frame4, text="price", height=2, width=7, font=("comic sans ms", "11"), fg="steel blue",
                        command=price)
-        price.grid(row=0, column=0, padx=10, pady=10)
-        total = Button(frame4, text="total", height=3, width=10, font=("comic sans ms", "11"), fg="steel blue",
+        price.grid(row=0, column=0, padx=7, pady=7)
+        total = Button(frame4, text="total", height=2, width=7, font=("comic sans ms", "11"), fg="steel blue",
                        command=amount)
-        total.grid(row=0, column=5, padx=10, pady=10)
-        reset = Button(frame4, text="reset", height=3, width=10, font=("comic sans ms", "11"), fg="steel blue",
+        total.grid(row=0, column=5, padx=7, pady=7)
+        reset = Button(frame4, text="reset", height=2, width=7, font=("comic sans ms", "11"), fg="steel blue",
                        command=reset)
-        reset.grid(row=0, column=10, padx=10, pady=10)
-        exit = Button(frame4, text="exit", height=3, width=10, font=("comic sans ms", "11"), fg="steel blue",
+        reset.grid(row=0, column=10, padx=7, pady=7)
+        exit = Button(frame4, text="logout", height=2, width=7, font=("comic sans ms", "11"), fg="steel blue",
                       command=quit)
-        exit.grid(row=0, column=15, padx=10, pady=10)
+        exit.grid(row=0, column=15, padx=7, pady=7)
+        #logout=Button(frame4, text="logout", height=2, width=7, font=("comic sans ms", "11"), fg="steel blue",
+        #              command=logout)
+        #logout.grid(row=0, column=20, padx=7, pady=7)
 
         # --------------------------------------------------------
 
@@ -303,12 +307,12 @@ def second_window():
         conn.close()
 
     second = Tk()
-    second.title("Python: Simple Login Application")
+    second.title(" Login ")
     second.geometry("{0}x{1}+0+0".format(second.winfo_screenwidth(),second.winfo_screenheight()))
-    load = Image.open("login.jpg")
-    background_image = ImageTk.PhotoImage(load)
-    background_label = Label(second, image=background_image)
-    background_label.place(x=0, y=0, relheight=1, relwidth=1)
+    load2 = Image.open("login.jpg")
+    background_image2 = ImageTk.PhotoImage(load2)
+    background_label2 = Label(second, image=background_image2)
+    background_label2.place(x=0, y=0, relheight=1, relwidth=1)
 
     # ==============================VARIABLES======================================
     USERNAME = StringVar()
@@ -318,33 +322,33 @@ def second_window():
     # Top = Frame(root)
     # Top.pack(side=TOP, fill=X,pady=50)
     # Top.place(relx=0.4,rely=0.2)
-    Form = Frame(second, height=500, width=500, bg='white')
+    Form = Frame(second, height=500, width=500, bg='white',borderwidth=2,relief='solid')
     # Form.pack(side=TOP, pady=100)
     # Form.pack(side=TOP,padx=40,pady=40)
     Form.place(relx=0.33, rely=0.2)
     # ==============================LABELS=========================================
-    lbl_title = Label(Form, text="Enter Username and Password to Login", font=('comic sans', 15), bg='white')
+    lbl_title = Label(Form, text="Enter \n Username  and  Password  \n to  Login ", font=('Lucida Handwriting', 15), bg='white',fg='LightSkyBlue3')
     lbl_title.grid(row=0, pady=30, columnspan=2)
     empty = Label(Form, text="", bg='white')
     empty.grid(row=1)
     empty = Label(Form, text="", bg='white')
     empty.grid(row=2)
 
-    lbl_username = Label(Form, text="Username:", font=('arial', 10), bd=15, bg='white')
+    lbl_username = Label(Form, text="Username:", font=('Lucida Handwriting', 12), bd=15, bg='white')
     lbl_username.grid(row=3, sticky='w', padx=20)
-    lbl_password = Label(Form, text="Password:", font=('arial', 10), bd=15, bg='white')
+    lbl_password = Label(Form, text="Password:", font=('Lucida Handwriting', 12), bd=15, bg='white')
     lbl_password.grid(row=5, sticky='w', padx=20)
     lbl_text = Label(Form, bg='white')
     lbl_text.grid(row=7, columnspan=2)
 
     # ==============================ENTRY WIDGETS==================================
-    username = Entry(Form, textvariable=USERNAME, font=(10), width=30)
+    username = Entry(Form, textvariable=USERNAME, font=('Lucida Handwriting',10), width=30,bg="gray99")
     username.grid(row=4, column=0, pady=5)
-    password = Entry(Form, textvariable=PASSWORD, show="*", font=(10), width=30)
+    password = Entry(Form, textvariable=PASSWORD, show="*", font=('Lucida Handwriting',10), width=30,bg='gray99')
     password.grid(row=6, column=0, pady=5)
 
     # ==============================BUTTON WIDGETS=================================
-    btn_login = Button(Form, text="Log In", font=(15), width=30, command=Login)
+    btn_login = Button(Form, text="Log In", font=('Lucida Handwriting',15), width=30, command=Login,bg='LightSkyBlue3')
     btn_login.grid(pady=25, padx=30, row=8, columnspan=2, sticky='w')
     btn_login.bind('<Return>', Login)
 
@@ -363,11 +367,11 @@ def second_window():
 
 first=Tk()
 first.geometry("{0}x{1}+0+0".format(first.winfo_screenwidth(), first.winfo_screenheight()))
-load=Image.open("fd1.jpg")
-background_image=ImageTk.PhotoImage(load)
-background_label=Label(first, image=background_image)
-background_label.place(x=0,y=0,relheight=1,relwidth=1)
-background_label.config(bg="white")
+load3=Image.open("fd1.jpg")
+background_image3=ImageTk.PhotoImage(load3)
+background_label3=Label(first, image=background_image3)
+background_label3.place(x=0,y=0,relheight=1,relwidth=1)
+background_label3.config(bg="white")
 
 welcome=Label(first,text="        Welcome to Restaurant Billing System ",font=("comic sans ms",'30',"bold"),fg="orange",bd=10,anchor=W,bg="white")
 welcome.grid(row=5,column=10)
