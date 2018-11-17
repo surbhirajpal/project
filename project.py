@@ -5,6 +5,7 @@ import time
 import random
 from tkinter import messagebox
 from PIL import Image,ImageTk
+import os
 
 
 def second_window():
@@ -16,12 +17,13 @@ def second_window():
         root = Tk()
         root.geometry("2000x650+0+0")
         root.title("Restaurant Management System")
-        load1 = Image.open("food2.jpg")
-        background1 = ImageTk.PhotoImage(load1)
-        background_label1 = Label(root, image=background1)
-        background_label1.place(x=0, y=0, relheight=1, relwidth=1)
-        #database
-        table=sqlite3.connect("bills.db")
+        load = Image.open("food2.jpg")
+        background_image = ImageTk.PhotoImage(load)
+        background_label = Label(root, image=background_image)
+        background_label.place(x=0, y=0, relheight=1, relwidth=1)
+
+        # database
+        table = sqlite3.connect("bills1.db")
         table.execute('''CREATE TABLE IF NOT EXISTS ORDERS
         (ORDER_NUMBER INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,FRIES_MEAL TEXT,LUNCH_MEAL TEXT,BURGER_MEAL TEXT,PIZZA_MEAL TEXT,CHEESE_BURGER TEXT,DRINKS TEXT,MEAL_1 TEXT,MEAL_2 TEXT,COST TEXT,SERVICE_CHARGE TEXT,TAX TEXT,SUBTOTAL TEXT,TOTAL TEXT);''')
         table.commit()
@@ -49,7 +51,7 @@ def second_window():
             f3.pack(side=RIGHT)
             b1 = Label(f3, text="PRICE\n", font=("comic sans ms", "10", "underline"), fg="steel blue")
             b1.pack()
-            b = Label(f3, text="Rs 100\n\nRs 230\n\nRs 155\n\nRs 440\n\nRs 150\n\nRs 50\n\n\nRs 250\n\n\nRs 500",
+            b = Label(f3, text="Rs 50\n\nRs 150\n\nRs 50\n\nRs 200\n\nRs 70\n\nRs 30\n\n\nRs 200\n\n\nRs 250",
                       font=("comic sans ms", "15"), fg="steel blue")
             b.pack()
 
@@ -73,56 +75,121 @@ def second_window():
         sub_total = StringVar()
         final = StringVar()
 
+        global order
+
         # use of class for calculations
         class Calculate:
             def price(self, e2, e3, e4, e5, e6, e7, m1, m2):
-                a = float(e2.get())
-                b = float(e3.get())
-                c = float(e4.get())
-                d = float(e5.get())
-                e = float(e6.get())
-                f = float(e7.get())
-                g = float(m1.get())
-                h = float(m2.get())
-                costoffries = a * 100
-                costoflunch = b * 230
-                costofburger = c * 155
-                costofpizza = d * 440
-                costofchesseburger = e * 150
-                costofdrinks = f * 50
-                costofmeal1 = g * 250
-                costofmeal2 = h * 500
-                costofmeal = "Rs.", str('%.2f' % (
-                        costoffries + costoflunch + costofburger + costofpizza + costofchesseburger + costofdrinks + costofmeal1 + costofmeal2))
-                charge = ((
-                                  costoffries + costoflunch + costofburger + costofpizza + costofchesseburger + costofdrinks + costofmeal1 + costofmeal2) / 99)
-                pay = ((
-                               costoffries + costoflunch + costofburger + costofpizza + costofchesseburger + costofdrinks + costofmeal1 + costofmeal2) * 0.10)
-                subtotal = (
-                        costoffries + costoflunch + costofburger + costofpizza + costofchesseburger + costofdrinks + costofmeal1 + costofmeal2)
-                Service = "Rs.", str('%.2f' % charge)
-                OverAllCost = "Rs.", str(charge + pay + subtotal)
-                PaidTax = "Rs.", str('%.2f' % pay)
-                cost.set(costofmeal)
-                service.set(Service)
-                tax.set(PaidTax)
-                sub_total.set(costofmeal)
-                final.set(OverAllCost)
+                try:
+                    global a, b, c, d, e, f, g, h
+                    a = int(e2.get())
+                    b = int(e3.get())
+                    c = int(e4.get())
+                    d = int(e5.get())
+                    e = int(e6.get())
+                    f = int(e7.get())
+                    g = int(m1.get())
+                    h = int(m2.get())
+                    global costoffries, costoflunch, costofburger, costofpizza, costofchesseburger, costofdrinks, costofmeal1, costofmeal2, costofmeal, Service, PaidTax, OverAllCost
+                    costoffries = a * 50
+                    costoflunch = b * 150
+                    costofburger = c * 50
+                    costofpizza = d * 200
+                    costofchesseburger = e * 70
+                    costofdrinks = f * 30
+                    costofmeal1 = g * 200
+                    costofmeal2 = h * 250
+                    costofmeal = ('%.2f' % (
+                                costoffries + costoflunch + costofburger + costofpizza + costofchesseburger + costofdrinks + costofmeal1 + costofmeal2))
+                    charge = ((
+                                          costoffries + costoflunch + costofburger + costofpizza + costofchesseburger + costofdrinks + costofmeal1 + costofmeal2) / 99)
+                    pay = ((
+                                       costoffries + costoflunch + costofburger + costofpizza + costofchesseburger + costofdrinks + costofmeal1 + costofmeal2) * 0.05)
+                    subtotal = (
+                                costoffries + costoflunch + costofburger + costofpizza + costofchesseburger + costofdrinks + costofmeal1 + costofmeal2)
+                    Service = ('%.2f' % charge)
+                    OverAllCost = (charge + pay + subtotal)
+                    PaidTax = ('%.2f' % pay)
+                    cost.set(costofmeal)
+                    service.set(Service)
+                    tax.set(PaidTax)
+                    sub_total.set(costofmeal)
+                    final.set(OverAllCost)
 
-                table.execute("INSERT INTO ORDERS(FRIES_MEAL,LUNCH_MEAL,BURGER_MEAL,PIZZA_MEAL,CHEESE_BURGER,DRINKS,MEAL_1,MEAL_2,COST,SERVICE_CHARGE,TAX,SUBTOTAL,TOTAL)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)",(str(costoffries),str(costoflunch),str(costofburger),str(costofpizza),str(costofchesseburger),str(costofdrinks),str(costofmeal1),str(costofmeal2),str(costofmeal),str(Service),str(PaidTax),str(costofmeal),str(OverAllCost),))
-                table.commit()
-                messagebox.showinfo("Success", "Bill Successfully Saved..")
-                for row in table.execute("SELECT * FROM ORDERS"):
-                    print(row)
+                    table.execute(
+                        "INSERT INTO ORDERS(FRIES_MEAL,LUNCH_MEAL,BURGER_MEAL,PIZZA_MEAL,CHEESE_BURGER,DRINKS,MEAL_1,MEAL_2,COST,SERVICE_CHARGE,TAX,SUBTOTAL,TOTAL)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                        (str(costoffries), str(costoflunch), str(costofburger), str(costofpizza),
+                         str(costofchesseburger),
+                         str(costofdrinks), str(costofmeal1), str(costofmeal2), str(costofmeal), str(Service),
+                         str(PaidTax),
+                         str(costofmeal), str(OverAllCost),))
+                    table.commit()
+                    messagebox.showinfo("Success", "Bill Successfully Saved..")
+                    '''
+                    print(table.execute("select * from orders"))
+                    items=[]
+                    for row in table.execute("SELECT * FROM ORDERS ORDER BY ORDER_NUMBER DESC LIMIT 1"):
+                        for i in len(row):
+                            print(row[i])
+                            if row[i]!=0:
+                                items.append(i)
 
+                        p=row
+                       # print(p)
+                       '''
+                except:
+                    messagebox.showwarning("WARNING", "Invalid Input")
+
+                    # generating bill
+
+            def bill(self):
+                localtime = time.strftime('%d-%m-%y   %H:%M:%S')
+                file = open("bills.txt", "w")
+                file.write(localtime + "\n")        
+                file.write("order number : " + str(order) + "\n\n\n")
+                file.write("ITEM                    QUANTITY                AMOUNT                        TOTAL\n")
+                if (costoffries != 0):
+                    file.write("Fries                   " + str(
+                        a) + "                         Rs 50" + "                       Rs " + str(costoffries) + "\n")
+                if (costoflunch != 0):
+                    file.write("Lunch                   " + str(
+                        b) + "                         Rs 150" + "                      Rs " + str(costoflunch) + "\n")
+                if (costofburger != 0):
+                    file.write("Burger                  " + str(
+                        c) + "                         Rs 50" + "                       Rs " + str(costofburger) + "\n")
+                if (costofpizza != 0):
+                    file.write("Pizza                   " + str(
+                        d) + "                         Rs 200" + "                       Rs " + str(costofpizza) + "\n")
+                if (costofchesseburger != 0):
+                    file.write("Cheese burger           " + str(
+                        e) + "                         Rs 70" + "                       Rs " + str(
+                        costofchesseburger) + "\n")
+                if (costofdrinks != 0):
+                    file.write("Drinks                  " + str(
+                        f) + "                         Rs 30" + "                       Rs " + str(costofdrinks) + "\n")
+                if (costofmeal1 != 0):
+                    file.write("Meal1                   " + str(
+                        g) + "                         Rs 200" + "                       Rs " + str(costofmeal1) + "\n")
+                if (costofmeal2 != 0):
+                    file.write("Meal2                   " + str(
+                        h) + "                         Rs 250" + "                       Rs " + str(costofmeal2) + "\n")
+
+                file.write("\n")
+                file.write("Cost of Meal : Rs " + str(costofmeal) + "\nService : Rs " + str(Service) + "\nTax : Rs " + str(
+                    PaidTax) + "\nToatal : Rs " + str(OverAllCost))
 
         def amount():
             c = Calculate()
             c.price(e2, e3, e4, e5, e6, e7, m1, m2)
 
+        def call_bill():
+            c = Calculate()
+            c.bill()
+            os.startfile("bills.txt")
+
         # ------------------------------------------------------------------------
 
-        # order number
+        # order NUMBER
         # x=random.randint(1,500)
         # order=str(x)
         global order
@@ -131,14 +198,14 @@ def second_window():
         # ----------------------------------------------------------------
 
         # giving default values to different variables
-        fries.set(0.0)
-        lunch.set(0.0)
-        burger.set(0.0)
-        pizza.set(0.0)
-        cheese_burger.set(0.0)
-        drinks.set(0.0)
-        meal_1.set(0.0)
-        meal_2.set(0.0)
+        fries.set(0)
+        lunch.set(0)
+        burger.set(0)
+        pizza.set(0)
+        cheese_burger.set(0)
+        drinks.set(0)
+        meal_1.set(0)
+        meal_2.set(0)
 
         # ----------------------------------------------------------------
 
@@ -147,18 +214,18 @@ def second_window():
             global order
             order = order + 1
             ran.set(order)
-            fries.set(0.0)
-            lunch.set(0.0)
-            burger.set(0.0)
-            pizza.set(0.0)
-            cheese_burger.set(0.0)
-            drinks.set(0.0)
-            meal_1.set(0.0)
-            meal_2.set(0.0)
-            cost.set(0.0)
-            service.set(0.0)
-            tax.set(0.0)
-            final.set(0.0)
+            fries.set(0)
+            lunch.set(0)
+            burger.set(0)
+            pizza.set(0)
+            cheese_burger.set(0)
+            drinks.set(0)
+            meal_1.set(0)
+            meal_2.set(0)
+            cost.set(0)
+            service.set(0)
+            tax.set(0)
+            final.set(0)
 
         def time_display():
             localtime = time.strftime('%d-%m-%y   %H:%M:%S')
@@ -166,9 +233,6 @@ def second_window():
             frame1.after(200, time_display)
 
         # ------------------------------------------------------------------------
-        def logout():
-            root.destroy()
-            second_window()
 
         # main window GUI representation
         frame1 = Frame(root)
@@ -238,27 +302,27 @@ def second_window():
 
         lbl8 = Label(frame3, text="Cost", font=("comic sans ms", "15"), fg="steel blue")
         lbl8.grid(row=2)
-        e8 = Entry(frame3, textvariable=cost, font=("comic sans ms", "15"), fg="steel blue")
+        e8 = Entry(frame3, textvariable=cost, font=("comic sans ms", "15"), fg="steel blue", state='disabled')
         e8.grid(row=2, column=1)
 
         lbl9 = Label(frame3, text="Service Charge", font=("comic sans ms", "15"), fg="steel blue")
         lbl9.grid(row=3)
-        e9 = Entry(frame3, textvariable=service, font=("comic sans ms", "15"), fg="steel blue")
+        e9 = Entry(frame3, textvariable=service, font=("comic sans ms", "15"), fg="steel blue", state='disabled')
         e9.grid(row=3, column=1)
 
         lbl10 = Label(frame3, text="Tax", font=("comic sans ms", "15"), fg="steel blue")
         lbl10.grid(row=4)
-        e10 = Entry(frame3, textvariable=tax, font=("comic sans ms", "15"), fg="steel blue")
+        e10 = Entry(frame3, textvariable=tax, font=("comic sans ms", "15"), fg="steel blue", state='disabled')
         e10.grid(row=4, column=1)
 
         lbl11 = Label(frame3, text="Subtotal", font=("comic sans ms", "15"), fg="steel blue")
         lbl11.grid(row=5)
-        e11 = Entry(frame3, textvariable=cost, font=("comic sans ms", "15"), fg="steel blue")
+        e11 = Entry(frame3, textvariable=cost, font=("comic sans ms", "15"), fg="steel blue", state='disabled')
         e11.grid(row=5, column=1)
 
         lbl12 = Label(frame3, text="Total", font=("comic sans ms", "15"), fg="steel blue")
         lbl12.grid(row=6)
-        e12 = Entry(frame3, textvariable=final, font=("comic sans ms", "15"), fg="steel blue")
+        e12 = Entry(frame3, textvariable=final, font=("comic sans ms", "15"), fg="steel blue", state='disabled')
         e12.grid(row=6, column=1)
 
         # ------------------------------------------------------------------
@@ -266,21 +330,21 @@ def second_window():
         # buttons and their working
         frame4 = Frame(root)
         frame4.pack(side=BOTTOM)
-        price = Button(frame4, text="price", height=2, width=7, font=("comic sans ms", "11"), fg="steel blue",
+        price = Button(frame4, text="price \n list", height=2, width=7, font=("comic sans ms", "11"), fg="steel blue",
                        command=price)
         price.grid(row=0, column=0, padx=7, pady=7)
-        total = Button(frame4, text="total", height=2, width=7, font=("comic sans ms", "11"), fg="steel blue",
+        total = Button(frame4, text="total \n amount", height=2, width=7, font=("comic sans ms", "11"), fg="steel blue",
                        command=amount)
         total.grid(row=0, column=5, padx=7, pady=7)
         reset = Button(frame4, text="reset", height=2, width=7, font=("comic sans ms", "11"), fg="steel blue",
                        command=reset)
         reset.grid(row=0, column=10, padx=7, pady=7)
-        exit = Button(frame4, text="logout", height=2, width=7, font=("comic sans ms", "11"), fg="steel blue",
+        exit = Button(frame4, text="exit", height=2, width=7, font=("comic sans ms", "11"), fg="steel blue",
                       command=quit)
         exit.grid(row=0, column=15, padx=7, pady=7)
-        #logout=Button(frame4, text="logout", height=2, width=7, font=("comic sans ms", "11"), fg="steel blue",
-        #              command=logout)
-        #logout.grid(row=0, column=20, padx=7, pady=7)
+        bill = Button(frame4, text="generate \n bill", height=2, width=7, font=("comic sans ms", "11"), fg="steel blue",
+                      command=call_bill)
+        bill.grid(row=0, column=20, padx=7, pady=7)
 
         # --------------------------------------------------------
 
@@ -358,9 +422,11 @@ def second_window():
         cursor = conn.cursor()
         cursor.execute(
             "CREATE TABLE IF NOT EXISTS `member` (mem_id INTEGER NOT NULL PRIMARY KEY  AUTOINCREMENT, username TEXT, password TEXT)")
-        cursor.execute("SELECT * FROM `member` WHERE `username` = 'admin' AND `password` = 'admin'")
+        cursor.execute("SELECT * FROM `member` WHERE `username` = 'admin' AND `password` = 'admin' and username='surbhi' and password='surbhi123'and username='rollno' and password='ue168108'")
         if cursor.fetchone() is None:
-            cursor.execute("INSERT INTO `member` (username, password) VALUES('admin', 'admin')")
+            cursor.execute("INSERT INTO `member` (username, password) VALUES('admin', 'admin123')")
+            cursor.execute("INSERT INTO `member` (username, password) VALUES('surbhi', 'surbhi123')")
+            cursor.execute("INSERT INTO `member` (username, password) VALUES('rollno', 'ue168108')")
             conn.commit()
     second.mainloop()
 
