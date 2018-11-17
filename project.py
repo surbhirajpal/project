@@ -445,7 +445,7 @@ login=Button(first,text="LOGIN",bg="white",font=("comic sans ms",'20',"bold"),fg
 login.place(relx=0.15, rely=0.4, anchor=NE)
 login.config(cursor="heart")
 
-cancel=Button(first,text="CANCEL",bg="white",font=("comic sans ms",'20',"bold"),fg="orange")
+cancel=Button(first,text="CANCEL",bg="white",font=("comic sans ms",'20',"bold"),fg="orange",command=exit)
 cancel.place(relx=0.4, rely=0.4, anchor=NE)
 cancel.config(cursor="heart")
 
