@@ -16,14 +16,14 @@ def second_window():
         second.destroy()
         root = Tk()
         root.geometry("2000x650+0+0")
-        root.title("Restaurant Management System")
+        root.title("Restaurant Billing System")
         load = Image.open("food2.jpg")
         background_image = ImageTk.PhotoImage(load)
         background_label = Label(root, image=background_image)
         background_label.place(x=0, y=0, relheight=1, relwidth=1)
 
         # database
-        table = sqlite3.connect("bills1.db")
+        table = sqlite3.connect("bills.db")
         table.execute('''CREATE TABLE IF NOT EXISTS ORDERS
         (ORDER_NUMBER INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,FRIES_MEAL TEXT,LUNCH_MEAL TEXT,BURGER_MEAL TEXT,PIZZA_MEAL TEXT,CHEESE_BURGER TEXT,DRINKS TEXT,MEAL_1 TEXT,MEAL_2 TEXT,COST TEXT,SERVICE_CHARGE TEXT,TAX TEXT,SUBTOTAL TEXT,TOTAL TEXT);''')
         table.commit()
@@ -145,7 +145,7 @@ def second_window():
             def bill(self):
                 localtime = time.strftime('%d-%m-%y   %H:%M:%S')
                 file = open("bills.txt", "w")
-                file.write(localtime + "\n")        
+                file.write(localtime + "\n")
                 file.write("order number : " + str(order) + "\n\n\n")
                 file.write("ITEM                    QUANTITY                AMOUNT                        TOTAL\n")
                 if (costoffries != 0):
@@ -238,7 +238,7 @@ def second_window():
         frame1 = Frame(root)
         frame1.pack(side=TOP)
 
-        x = Label(frame1, text="RESTAURANT MANAGEMENT SYSTEM", font=("comic sans ms", '30', "bold", "underline"),
+        x = Label(frame1, text="RESTAURANT BILLING SYSTEM", font=("comic sans ms", '30', "bold", "underline"),
                   fg="steel blue", bd=10, anchor=W)
         x.grid(row=0, column=0)
 
@@ -253,7 +253,7 @@ def second_window():
 
         lbl1 = Label(frame2, text="Order No.", font=("comic sans ms", "15"), fg="steel blue")
         lbl1.grid(row=0)
-        e1 = Entry(frame2, textvariable=ran, font=("comic sans ms", "15"), fg="steel blue")
+        e1 = Entry(frame2, textvariable=ran, font=("comic sans ms", "15"), fg="steel blue",state='disabled')
         e1.grid(row=0, column=1)
 
         lbl2 = Label(frame2, text="Fries Meal", font=("comic sans ms", "15"), fg="steel blue")
@@ -448,5 +448,8 @@ login.config(cursor="heart")
 cancel=Button(first,text="CANCEL",bg="white",font=("comic sans ms",'20',"bold"),fg="orange",command=exit)
 cancel.place(relx=0.4, rely=0.4, anchor=NE)
 cancel.config(cursor="heart")
+
+
+
 
 first.mainloop()
