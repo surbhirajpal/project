@@ -1,3 +1,2 @@
 # project
-this is a restaurant billing project or restaurant management project which supports on billing system.
-this project is written in tkinter and uses tkinter as gui and sqlite as database 
+this is a restaurant billing system or restaurant management system which supports only billing system.This project is written in python and uses tkinter as gui and sqlite as database. 
